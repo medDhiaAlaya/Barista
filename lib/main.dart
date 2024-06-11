@@ -1,25 +1,38 @@
-import 'package:barista/presentation/welcome.dart';
-import 'package:barista/shared/bloc_observer.dart';
+import 'package:barista/presentation/home/bloc/home_bloc.dart';
+import 'package:barista/presentation/home/home.dart';
+import 'package:barista/presentation/on_boarding/on_boarding_screen.dart';
+import 'package:barista/shared/network/local/cache_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
-  //Bloc.observer=MyBlocObserver();
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CacheHelper.init();
+  bool? onBoarding = await CacheHelper.getData(key: 'onboarding');
+  final Widget initialWidget;
+  if (onBoarding == true) {
+    initialWidget = const HomeScreen();
+  } else {
+    initialWidget = const OnBoardingScreen();
+  }
+  runApp(MyApp(initialWidget: initialWidget));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  final Widget initialWidget;
+  const MyApp({super.key, required this.initialWidget});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HomeBloc(),
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: initialWidget,
       ),
-      home: const  Welcome(),
     );
   }
 }

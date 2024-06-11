@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 
 import 'package:path/path.dart' as p;
 
-import '../../../helpers/connection_checker.dart';
 import '../../urls.dart';
-import '../exceptions.dart';
 import 'data.dart';
 
 class DataProvider implements Data {
