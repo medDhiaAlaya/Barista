@@ -1,26 +1,26 @@
 import 'package:barista/models/category.dart';
-import 'package:barista/models/coffee.dart';
-import 'package:barista/presentation/categories/bloc/categories_bloc.dart';
-import 'package:barista/presentation/products/products.dart';
+import 'package:barista/models/product.dart';
+import 'package:barista/presentation/product/product.dart';
+import 'package:barista/presentation/products/bloc/products_bloc.dart';
 import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/components/error_widget.dart';
 import 'package:barista/shared/components/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CategoriesScreen extends StatefulWidget {
-  final Coffee coffee;
-  const CategoriesScreen({super.key, required this.coffee});
+class ProductsScreen extends StatefulWidget {
+  final Category category;
+  const ProductsScreen({super.key, required this.category});
 
   @override
-  State<CategoriesScreen> createState() => _CategoriesScreenState();
+  State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
-class _CategoriesScreenState extends State<CategoriesScreen> {
+class _ProductsScreenState extends State<ProductsScreen> {
   @override
   void initState() {
-    CategoriesBloc.get(context)
-        .add(CategoriesGetCategoriesEvent(coffeeId: widget.coffee.id));
+    ProductsBloc.get(context)
+        .add(ProductsGetProductsEvent(categoryId: widget.category.id));
     super.initState();
   }
 
@@ -28,17 +28,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.coffee.name),
+        title: Text(widget.category.name),
       ),
-      body: BlocBuilder<CategoriesBloc, CategoriesState>(
+      body: BlocBuilder<ProductsBloc, ProductsState>(
         builder: (context, state) {
-          if (state is CategoriesSuccessState) {
+          if (state is ProductsSuccessState) {
             return Builder(
               builder: (context) {
-                if (state.categories.isEmpty) {
+                if (state.products.isEmpty) {
                   return const Center(
                     child: DefaultText(
-                      text: 'No categories found!',
+                      text: 'No products found!',
                     ),
                   );
                 } else {
@@ -49,20 +49,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       crossAxisSpacing: 20,
                       mainAxisSpacing: 20,
                     ),
-                    itemCount: state.categories.length,
+                    itemCount: state.products.length,
                     itemBuilder: (context, index) {
-                      return categoryItem(state.categories[index]);
+                      return productItem(state.products[index]);
                     },
                   );
                 }
               },
             );
-          } else if (state is CategoriesErrorState) {
+          } else if (state is ProductsErrorState) {
             return errorWidget(
               state.message,
               () {
-                CategoriesBloc.get(context).add(
-                    CategoriesGetCategoriesEvent(coffeeId: widget.coffee.id));
+                ProductsBloc.get(context).add(
+                    ProductsGetProductsEvent(categoryId: widget.category.id));
               },
             );
           } else {
@@ -73,13 +73,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 
-  Widget categoryItem(Category category) {
+  Widget productItem(Product product) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ProductsScreen(
-              category: category,
+            builder: (context) => ProductScreen(
+              product: product,
             ),
           ),
         );
@@ -96,7 +96,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DefaultText(
-              text: category.name,
+              text: product.name,
               textSize: 18,
             ),
           ],

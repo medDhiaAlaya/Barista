@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'loading_screen_controller.dart';
@@ -13,7 +12,7 @@ class LoadingScreen {
 
   void show({
     required BuildContext context,
-    required String text,
+    String text = "attendez s'il vous plaît",
   }) {
     if (controller?.update(text) ?? false) {
       return;
@@ -64,12 +63,7 @@ class LoadingScreen {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 10),
-                       Center(
-              child: Image.asset(
-               'assets/images/loading.gif',
-             width: 100,
-               height: 100,),
-              ),
+                      const CircularProgressIndicator(),
                       const SizedBox(height: 20),
                       StreamBuilder(
                         stream: text.stream,

@@ -1,5 +1,5 @@
-import 'package:barista/presentation/categories/Categories.dart';
 import 'package:barista/presentation/home/bloc/home_bloc.dart';
+import 'package:barista/presentation/welcome/welcome.dart';
 import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/components/my_button.dart';
 import 'package:barista/shared/helpers/loading_screen/loading_screen.dart';
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
             LoadingScreen.instance().hide();
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => CategoriesScreen(
+                builder: (context) => Welcome(
                   coffeeId: state.coffeeId,
                 ),
               ),
