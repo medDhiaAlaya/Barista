@@ -58,6 +58,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               },
             );
           } else if (state is ProductsErrorState) {
+            
             return errorWidget(
               state.message,
               () {

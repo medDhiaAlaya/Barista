@@ -23,10 +23,10 @@ class DataProvider implements Data {
       } else {
         final coffee = Coffee(
           id: data.id,
-          name: data['name'],
-          description: data['description'],
-          image: data['image'],
-          admin: data['admin'],
+          name: data['name'] ?? '',
+          description: data['description'] ?? '',
+          image: data['image'] ?? '',
+          admin: data['admin'] ?? '',
         );
         return coffee;
       }
@@ -56,11 +56,11 @@ class DataProvider implements Data {
         products.add(
           Product(
             id: element.id,
-            name: element['name'],
-            price: element['price'],
-            description: element['description'],
-            banner: element['banner'],
-            images: element['images'],
+            name: element['name'] ?? '',
+            price: double.tryParse(element['price']?.toString() ?? '0') ?? 0,
+            description: element['description'] ?? '',
+            banner: element['banner'] ?? '',
+            images: List<String>.from(element['images']?? []) ,
             categoryId: categoryId,
           ),
         );
@@ -71,6 +71,7 @@ class DataProvider implements Data {
     } on NoInternetConnectionException {
       rethrow;
     } catch (_) {
+      print(_);
       throw AnotherException(message: 'An error occured');
     }
   }
@@ -89,9 +90,9 @@ class DataProvider implements Data {
         categories.add(
           Category(
             id: element.id,
-            name: element['name'],
-            image: element['image'],
-            coffeeId: element['coffee_id'],
+            name: element['name'] ?? '',
+            image: element['image'] ?? '',
+            coffeeId: element['coffee_id'] ?? '',
           ),
         );
       }

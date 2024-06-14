@@ -24,7 +24,7 @@ class Product {
       price: double.tryParse(data['price'] ?? '0') ?? 0,
       description: data['description'] ?? '',
       banner: data['banner'] ?? '',
-      images: data['images'] ?? '',
+      images: data['images'] ?? [],
       categoryId: data['category_id'] ?? '',
     );
   }
