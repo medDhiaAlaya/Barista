@@ -13,8 +13,13 @@ Widget imageLoader(String image) {
           imageUrl: snapshot.data!,
           imageBuilder: (context, imageProvider) {
             return Container(
-              decoration:
-                  BoxDecoration(image: DecorationImage(image: imageProvider)),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.fill,
+                ),
+              ),
             );
           },
           placeholder: (context, url) {
@@ -31,7 +36,7 @@ Widget imageLoader(String image) {
             );
           },
         );
-      }else{
+      } else {
         return Container();
       }
     },

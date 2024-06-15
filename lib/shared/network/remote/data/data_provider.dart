@@ -71,7 +71,6 @@ class DataProvider implements Data {
     } on NoInternetConnectionException {
       rethrow;
     } catch (_) {
-      print(_);
       throw AnotherException(message: 'An error occured');
     }
   }

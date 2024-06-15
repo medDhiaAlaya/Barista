@@ -5,32 +5,32 @@ class MyException implements Exception {
 
 //login Excptions
 class UnauthorizedAuthException extends MyException {
-  UnauthorizedAuthException({required String message}) : super(message: message);
+  UnauthorizedAuthException({required super.message});
 }
 
 class InvalidDataAuthException extends MyException {
-  InvalidDataAuthException({required String message}) : super(message: message);
+  InvalidDataAuthException({required super.message});
 }
 
 // Generic Exceptions
 
 
 class GenericAuthException extends MyException {
-  GenericAuthException({required String message}) : super(message: message);
+  GenericAuthException({required super.message});
 }
 
 class DataAlreadyInUserException extends MyException {
-  DataAlreadyInUserException({required String message}) : super(message: message);
+  DataAlreadyInUserException({required super.message});
 }
 
 class AnotherException extends MyException {
-  AnotherException({required String message}) : super(message: message);
+  AnotherException({required super.message});
 }
 //data exception
 class GenericDataFetchException extends MyException {
-  GenericDataFetchException({required String message}) : super(message: message);
+  GenericDataFetchException({required super.message});
 }
 //no internet exception
 class NoInternetConnectionException extends MyException {
-  NoInternetConnectionException({required String message}) : super(message: message);
+  NoInternetConnectionException({required super.message});
 }

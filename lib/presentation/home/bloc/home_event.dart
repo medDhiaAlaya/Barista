@@ -10,8 +10,6 @@ class HomeScanQREvent extends HomeEvent {
 }
 
 class HomeConnectToWifiEvent extends HomeEvent {
-  final String coffeeId;
-  final String ssid;
-  final String password;
-  HomeConnectToWifiEvent({required this.ssid,required this.password,required this.coffeeId});
+  final QrData qrData;
+  HomeConnectToWifiEvent({required this.qrData});
 }

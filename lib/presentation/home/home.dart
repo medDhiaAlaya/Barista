@@ -54,25 +54,21 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is HomeQRScanErrorState) {
             controller?.resumeCamera();
             LoadingScreen.instance().hide();
-            snackBar(context, state.message, true);
+            showToast( state.message, true);
           } else if (state is HomeQRScanSuccessState) {
             HomeBloc.get(context).add(
-              HomeConnectToWifiEvent(
-                ssid: state.ssid,
-                password: state.password,
-                coffeeId: state.coffeeId,
-              ),
+              HomeConnectToWifiEvent(qrData: state.qrData),
             );
           } else if (state is HomeConnectToWifiErrorState) {
             controller?.resumeCamera();
             LoadingScreen.instance().hide();
-            snackBar(context, state.message, true);
+            showToast(state.message, true);
           } else if (state is HomeConnectToWifiSuccessState) {
             LoadingScreen.instance().hide();
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => Welcome(
-                  coffeeId: state.coffeeId,
+                  qrData: state.qrData,
                 ),
               ),
               (route) => false,

@@ -16,10 +16,8 @@ final class HomeQRScanErrorState extends HomeState {
   HomeQRScanErrorState({required this.message});
 }
 final class HomeQRScanSuccessState extends HomeState {
-  final String ssid;
-  final String password;
-  final String coffeeId;
-  HomeQRScanSuccessState({required this.ssid,required this.coffeeId,required this.password});
+  final QrData qrData ;
+  HomeQRScanSuccessState({required this.qrData});
 }
 
 final class HomeConnectToWifiErrorState extends HomeState {
@@ -27,8 +25,8 @@ final class HomeConnectToWifiErrorState extends HomeState {
   HomeConnectToWifiErrorState({required this.message});
 }
 final class HomeConnectToWifiSuccessState extends HomeState {
-  final String coffeeId;
-    HomeConnectToWifiSuccessState({required this.coffeeId});
+  final QrData qrData;
+    HomeConnectToWifiSuccessState({required this.qrData});
 }
 
 

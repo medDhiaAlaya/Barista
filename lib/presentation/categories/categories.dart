@@ -1,10 +1,13 @@
 import 'package:barista/models/category.dart';
 import 'package:barista/models/coffee.dart';
+import 'package:barista/presentation/cart/bloc/shopping_cart_bloc.dart';
+import 'package:barista/presentation/cart/shopping_cart.dart';
 import 'package:barista/presentation/categories/bloc/categories_bloc.dart';
 import 'package:barista/presentation/products/products.dart';
 import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/components/error_widget.dart';
 import 'package:barista/shared/components/loading_shimmer.dart';
+import 'package:barista/shared/helpers/image_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,8 +22,11 @@ class CategoriesScreen extends StatefulWidget {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   void initState() {
-    CategoriesBloc.get(context)
-        .add(CategoriesGetCategoriesEvent(coffeeId: widget.coffee.id));
+    CategoriesBloc.get(context).add(
+      CategoriesGetCategoriesEvent(
+        coffeeId: widget.coffee.id,
+      ),
+    );
     super.initState();
   }
 
@@ -29,40 +35,87 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.coffee.name),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ShoppingCartScreen(),
+                ),
+              );
+            },
+            icon: BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+              builder: (context, state) {
+                return Badge(
+                  label: DefaultText(
+                    text: ShoppingCartBloc.get(context)
+                        .shoppingCart
+                        .items
+                        .length
+                        .toString(),
+                    textColor: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.shopping_cart,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: BlocBuilder<CategoriesBloc, CategoriesState>(
         builder: (context, state) {
           if (state is CategoriesSuccessState) {
-            return Builder(
-              builder: (context) {
-                if (state.categories.isEmpty) {
-                  return const Center(
-                    child: DefaultText(
-                      text: 'No categories found!',
-                    ),
-                  );
-                } else {
-                  return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                    ),
-                    itemCount: state.categories.length,
-                    itemBuilder: (context, index) {
-                      return categoryItem(state.categories[index]);
-                    },
-                  );
-                }
+            return RefreshIndicator(
+              onRefresh: () async {
+                CategoriesBloc.get(context).add(
+                  CategoriesGetCategoriesEvent(
+                    coffeeId: widget.coffee.id,
+                  ),
+                );
               },
+              child: Builder(
+                builder: (context) {
+                  if (state.categories.isEmpty) {
+                    return ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: const [
+                        SizedBox(
+                          height: 200,
+                        ),
+                        Center(
+                          child: DefaultText(
+                            text: 'No categories found!',
+                          ),
+                        )
+                      ],
+                    );
+                  } else {
+                    return GridView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemCount: state.categories.length,
+                      itemBuilder: (context, index) {
+                        return categoryItem(state.categories[index]);
+                      },
+                    );
+                  }
+                },
+              ),
             );
           } else if (state is CategoriesErrorState) {
             return errorWidget(
               state.message,
               () {
                 CategoriesBloc.get(context).add(
-                    CategoriesGetCategoriesEvent(coffeeId: widget.coffee.id));
+                  CategoriesGetCategoriesEvent(
+                    coffeeId: widget.coffee.id,
+                  ),
+                );
               },
             );
           } else {
@@ -86,15 +139,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey,
           borderRadius: BorderRadius.circular(15),
         ),
-        height: 10,
-        width: 70,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 120,
+              width: 130,
+              child: imageLoader(
+                category.image,
+              ),
+            ),
             DefaultText(
               text: category.name,
               textSize: 18,

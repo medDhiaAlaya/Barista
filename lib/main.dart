@@ -1,4 +1,5 @@
 import 'package:barista/firebase_options.dart';
+import 'package:barista/presentation/cart/bloc/shopping_cart_bloc.dart';
 import 'package:barista/presentation/categories/bloc/categories_bloc.dart';
 import 'package:barista/presentation/home/bloc/home_bloc.dart';
 import 'package:barista/presentation/home/home.dart';
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
             create: (context) => ProductsBloc(
               RepositoryProvider.of<DataService>(context),
             ),
+          ),
+          BlocProvider(
+            create: (context) => ShoppingCartBloc(),
           ),
         ],
         child: MaterialApp(
