@@ -71,6 +71,9 @@ dev_dependencies:
   conditional_builder_null_safety: ^0.0.6
   flutter_native_splash: ^2.3.7
   dropdown_button2: ^2.3.9
+flutter_native_splash:
+  color: "#ffbc0d"
+  image: assets/images/2.png
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

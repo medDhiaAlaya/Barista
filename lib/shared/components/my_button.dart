@@ -1,11 +1,10 @@
-
+import 'package:barista/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyButton extends StatefulWidget {
-
   final String title;
-   final Function() onPressed;
+  final Function() onPressed;
 
   const MyButton({
     super.key,
@@ -23,19 +22,22 @@ class _MyButtonState extends State<MyButton> {
     return ElevatedButton(
       onPressed: () => widget.onPressed(),
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xffC67C4E),
-        foregroundColor: Colors.white,
+        backgroundColor: kPrimaryColor,
+        foregroundColor: Colors.black,
         elevation: 0,
         shape: RoundedRectangleBorder(
           side: BorderSide.none,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
-      child: Text(
-        widget.title.toString(),
-        style: GoogleFonts.sora(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Text(
+          widget.title.toString(),
+          style: GoogleFonts.sora(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

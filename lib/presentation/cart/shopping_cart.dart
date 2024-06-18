@@ -4,6 +4,7 @@ import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/helpers/image_loader.dart';
 import 'package:barista/shared/helpers/show_dialog.dart';
 import 'package:barista/shared/helpers/snack_bar.dart';
+import 'package:barista/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +19,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kPrimaryColor,
       appBar: AppBar(
         title: const Text('Shopping Cart'),
       ),
@@ -37,33 +39,43 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                 ),
               );
             } else {
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: shoppingCart.items.length,
-                      itemBuilder: (context, index) {
-                        return cartItemWidget(shoppingCart.items[index]);
-                      },
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    decoration: BoxDecoration(border: Border.all()),
-                    child: Center(
-                      child: DefaultText(
-                        text:
-                            'Total: ${ShoppingCartBloc.get(context).shoppingCart.totalPrice.toStringAsFixed(2)} DT',
-                        textSize: 18.0,
-                        weight: FontWeight.bold,
+              return Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: shoppingCart.items.length,
+                        itemBuilder: (context, index) {
+                          return cartItemWidget(shoppingCart.items[index]);
+                        },
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 15),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 15.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: DefaultText(
+                            text:
+                                'Total  :   ${ShoppingCartBloc.get(context).shoppingCart.totalPrice.toStringAsFixed(2)} DT',
+                            textSize: 18.0,
+                            weight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             }
           });
@@ -81,15 +93,47 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
           height: 60,
           child: imageLoader(shoppingCartItem.product.banner),
         ),
-        trailing: Text(
-          '${shoppingCartItem.totalPrice.toStringAsFixed(2)} DT',
+        trailing: IconButton(
+          icon: const Icon(
+            Icons.delete_outline,
+            color: Colors.red,
+            size: 25,
+          ),
+          onPressed: () async {
+            bool? choice = await showAlert(
+              context: context,
+              title: 'Remove Product',
+              content: 'Are you sure ?',
+              optionsBuilder: () => {
+                'Yes': true,
+                'No': false,
+              },
+            );
+            if (choice == true) {
+              ShoppingCartBloc.get(context).add(
+                ShoppingCartRemoveItemEvent(
+                  shoppingCartItem: shoppingCartItem,
+                ),
+              );
+              showToast("Product removed", false);
+            }
+          },
         ),
-        title: Text(shoppingCartItem.product.name),
+        title: DefaultText(
+          text: shoppingCartItem.product.name,
+          textSize: 20,
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              'Price: ${shoppingCartItem.product.price.toStringAsFixed(2)} DT',
+            const SizedBox(
+              height: 8,
+            ),
+            DefaultText(
+              text:
+                  'Total : ${shoppingCartItem.totalPrice.toStringAsFixed(2)} DT',
+              textSize: 14,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,7 +142,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.remove),
-                      onPressed: shoppingCartItem.quantity > 0
+                      onPressed: shoppingCartItem.quantity > 1
                           ? () {
                               ShoppingCartBloc.get(context).add(
                                 ShoppingCartUpdateItemEvent(
@@ -108,7 +152,10 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                             }
                           : null,
                     ),
-                    Text(shoppingCartItem.quantity.toString()),
+                    DefaultText(
+                      text: shoppingCartItem.quantity.toString(),
+                      textSize: 20,
+                    ),
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
@@ -120,28 +167,6 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                       },
                     ),
                   ],
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () async {
-                    bool? choice = await showAlert(
-                      context: context,
-                      title: 'Remove Product',
-                      content: 'Are you sure ?',
-                      optionsBuilder: () => {
-                        'No': false,
-                        'Yes': true,
-                      },
-                    );
-                    if (choice == true) {
-                      ShoppingCartBloc.get(context).add(
-                        ShoppingCartRemoveItemEvent(
-                          shoppingCartItem: shoppingCartItem,
-                        ),
-                      );
-                      showToast("Product removed", false);
-                    }
-                  },
                 ),
               ],
             ),

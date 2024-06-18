@@ -8,6 +8,7 @@ import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/components/error_widget.dart';
 import 'package:barista/shared/components/loading_shimmer.dart';
 import 'package:barista/shared/helpers/image_loader.dart';
+import 'package:barista/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,6 +34,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kPrimaryColor,
       appBar: AppBar(
         title: Text(widget.coffee.name),
         actions: [
@@ -56,7 +58,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     textColor: Colors.white,
                   ),
                   child: const Icon(
-                    Icons.shopping_cart,
+                    Icons.shopping_bag_outlined,
                   ),
                 );
               },
@@ -137,27 +139,31 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 120,
-              width: 130,
-              child: imageLoader(
-                category.image,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            DefaultText(
-              text: category.name,
-              textSize: 18,
-            ),
-          ],
+              SizedBox(
+                height: 120,
+                width: 130,
+                child: imageLoader(
+                  category.image,
+                ),
+              ),
+              DefaultText(
+                text: category.name,
+                textSize: 18,
+              ),
+            ],
+          ),
         ),
       ),
     );

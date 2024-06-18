@@ -5,6 +5,7 @@ import 'package:barista/presentation/cart/shopping_cart.dart';
 import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/helpers/image_loader.dart';
 import 'package:barista/shared/helpers/snack_bar.dart';
+import 'package:barista/shared/styles/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +44,7 @@ class _ProductScreenState extends State<ProductScreen> {
     return BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
             title: Text(widget.product.name),
             actions: [
@@ -64,7 +66,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     textColor: Colors.white,
                   ),
                   child: const Icon(
-                    Icons.shopping_cart,
+                    Icons.shopping_bag_outlined,
                   ),
                 ),
               ),
@@ -99,12 +101,71 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
           ),
           bottomNavigationBar: BottomAppBar(
+            color: Colors.white,
             child: Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(kPrimaryColor)),
+                      onPressed: () {
+                        if (quantity > 0) {
+                          bool isItemExists = ShoppingCartBloc.get(context)
+                              .shoppingCart
+                              .items
+                              .any(
+                                (item) => item.product.id == widget.product.id,
+                              );
+                          if (isItemExists) {
+                            ShoppingCartBloc.get(context).add(
+                              ShoppingCartUpdateItemEvent(
+                                shoppingCartItem: ShoppingCartBloc.get(context)
+                                    .shoppingCart
+                                    .items
+                                    .singleWhere(
+                                      (item) =>
+                                          item.product.id == widget.product.id,
+                                    ),
+                                quantity: quantity,
+                              ),
+                            );
+                            showToast("Product updated", false);
+                          } else {
+                            ShoppingCartBloc.get(context).add(
+                              ShoppingCartAddItemEvent(
+                                shoppingCartItem: ShoppingCartItem(
+                                  product: widget.product,
+                                  quantity: quantity,
+                                  totalPrice: widget.product.price * quantity,
+                                ),
+                              ),
+                            );
+                            showToast("Product added", false);
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: DefaultText(
+                          textSize: 16.0,
+                          text: ShoppingCartBloc.get(context)
+                                  .shoppingCart
+                                  .items
+                                  .any(
+                                    (item) =>
+                                        item.product.id == widget.product.id,
+                                  )
+                              ? 'Update'
+                              : 'Add To Cart',
+                        ),
+                      ),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -120,7 +181,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                   }
                                 : null,
                           ),
-                          Text(quantity.toString()),
+                          DefaultText(
+                            textSize: 20,
+                            text: quantity.toString(),
+                            weight: FontWeight.w400,
+                          ),
                           IconButton(
                             icon: const Icon(Icons.add),
                             onPressed: () {
@@ -132,51 +197,6 @@ class _ProductScreenState extends State<ProductScreen> {
                         ],
                       ),
                     ],
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (quantity > 0) {
-                        bool isItemExists = ShoppingCartBloc.get(context)
-                            .shoppingCart
-                            .items
-                            .any(
-                              (item) => item.product.id == widget.product.id,
-                            );
-                        if (isItemExists) {
-                          ShoppingCartBloc.get(context).add(
-                            ShoppingCartUpdateItemEvent(
-                              shoppingCartItem: ShoppingCartBloc.get(context)
-                                  .shoppingCart
-                                  .items
-                                  .singleWhere(
-                                    (item) =>
-                                        item.product.id == widget.product.id,
-                                  ),
-                              quantity: quantity,
-                            ),
-                          );
-                          showToast("Product updated", false);
-                        } else {
-                          ShoppingCartBloc.get(context).add(
-                            ShoppingCartAddItemEvent(
-                              shoppingCartItem: ShoppingCartItem(
-                                product: widget.product,
-                                quantity: quantity,
-                                totalPrice: widget.product.price * quantity,
-                              ),
-                            ),
-                          );
-                          showToast("Product added", false);
-                        }
-                      }
-                    },
-                    child: Text(
-                      ShoppingCartBloc.get(context).shoppingCart.items.any(
-                                (item) => item.product.id == widget.product.id,
-                              )
-                          ? 'Update'
-                          : 'Add To Cart',
-                    ),
                   ),
                 ],
               ),

@@ -88,7 +88,7 @@ class _WelcomeState extends State<Welcome> {
                   height: 10,
                 ),
                 MyButton(
-                  title: 'chack menu',
+                  title: 'check menu',
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

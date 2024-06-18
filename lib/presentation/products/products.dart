@@ -56,7 +56,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     textColor: Colors.white,
                   ),
                   child: const Icon(
-                    Icons.shopping_cart,
+                    Icons.shopping_bag_outlined,
                   ),
                 );
               },
