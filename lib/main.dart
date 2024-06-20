@@ -11,6 +11,7 @@ import 'package:barista/shared/network/remote/data/data_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,12 +60,19 @@ class MyApp extends StatelessWidget {
             create: (context) => ShoppingCartBloc(),
           ),
         ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: OnBoardingScreen(),
-          //initialWidget,
-        ),
+        child: ScreenUtilInit(
+            designSize: const Size(375, 812),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            useInheritedMediaQuery: true,
+            builder: (context, state) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: initialWidget,
+              );
+            }),
       ),
     );
   }
 }
+//{"coffee_id":"0Hf8l5tOTkjXLONA2OnB","ssid":"test","password":"test"}

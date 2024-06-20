@@ -1,6 +1,7 @@
 import 'package:barista/models/category.dart';
 import 'package:barista/models/coffee.dart';
 import 'package:barista/models/product.dart';
+import 'package:barista/presentation/products/widgets/enums.dart';
 import 'package:barista/shared/helpers/connection_checker.dart';
 import 'package:barista/shared/network/remote/exceptions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,8 +61,12 @@ class DataProvider implements Data {
             price: double.tryParse(element['price']?.toString() ?? '0') ?? 0,
             description: element['description'] ?? '',
             banner: element['banner'] ?? '',
-            images: List<String>.from(element['images']?? []) ,
+            images: List<String>.from(element['images'] ?? []),
             categoryId: categoryId,
+            type: ProductType.drink,
+            // type: element['type'] == 'drink'
+            //     ? ProductType.drink
+            //     : ProductType.food,
           ),
         );
       }
@@ -71,6 +76,7 @@ class DataProvider implements Data {
     } on NoInternetConnectionException {
       rethrow;
     } catch (_) {
+      print(_);
       throw AnotherException(message: 'An error occured');
     }
   }

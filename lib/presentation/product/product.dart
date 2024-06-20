@@ -75,7 +75,7 @@ class _ProductScreenState extends State<ProductScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                slider(widget.product.images),
+                slider(widget.product.images, widget.product.id),
                 const SizedBox(height: 16.0),
                 DefaultText(
                   text: widget.product.name,
@@ -111,8 +111,10 @@ class _ProductScreenState extends State<ProductScreen> {
                   Expanded(
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(kPrimaryColor)),
+                        backgroundColor: WidgetStatePropertyAll(
+                          kPrimaryColor,
+                        ),
+                      ),
                       onPressed: () {
                         if (quantity > 0) {
                           bool isItemExists = ShoppingCartBloc.get(context)
@@ -207,7 +209,7 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget slider(List<String> images) {
+  Widget slider(List<String> images, String id) {
     final size = MediaQuery.of(context).size;
     return Column(
       children: [
@@ -217,15 +219,30 @@ class _ProductScreenState extends State<ProductScreen> {
             items: List.generate(
               images.length,
               (index) {
-                return Center(
-                  child: SizedBox(
-                    height: 250,
-                    width: size.width - 10,
-                    child: imageLoader(
-                      images[index],
+                if (index == 0) {
+                  return Hero(
+                    tag: id,
+                    child: Center(
+                      child: SizedBox(
+                        height: 250,
+                        width: size.width - 10,
+                        child: imageLoader(
+                          images[index],
+                        ),
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  return Center(
+                    child: SizedBox(
+                      height: 250,
+                      width: size.width - 10,
+                      child: imageLoader(
+                        images[index],
+                      ),
+                    ),
+                  );
+                }
               },
             ),
             options: CarouselOptions(

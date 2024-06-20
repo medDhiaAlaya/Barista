@@ -4,6 +4,8 @@ import 'package:barista/presentation/cart/bloc/shopping_cart_bloc.dart';
 import 'package:barista/presentation/cart/shopping_cart.dart';
 import 'package:barista/presentation/product/product.dart';
 import 'package:barista/presentation/products/bloc/products_bloc.dart';
+import 'package:barista/presentation/products/widgets/swipe_widget.dart';
+import 'package:barista/presentation/products/widgets/swiper_header_widget.dart';
 import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/components/error_widget.dart';
 import 'package:barista/shared/components/loading_shimmer.dart';
@@ -20,6 +22,8 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  ValueNotifier<ProductWithDirection> productNotifier =
+      ValueNotifier<ProductWithDirection>(ProductWithDirection());
   @override
   void initState() {
     ProductsBloc.get(context).add(
@@ -67,45 +71,64 @@ class _ProductsScreenState extends State<ProductsScreen> {
       body: BlocBuilder<ProductsBloc, ProductsState>(
         builder: (context, state) {
           if (state is ProductsSuccessState) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                ProductsBloc.get(context).add(
-                  ProductsGetProductsEvent(
-                    categoryId: widget.category.id,
-                  ),
-                );
-              },
-              child: Builder(
-                builder: (context) {
-                  if (state.products.isEmpty) {
-                    return ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [
-                        SizedBox(
-                          height: 200,
+            return Builder(
+              builder: (context) {
+                if (state.products.isEmpty) {
+                  return Center(
+                    child: DefaultText(
+                      text: 'No products found!',
+                    ),
+                  );
+                } else if (state.products.length == 1) {
+                  return Stack(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProductScreen(
+                                product: state.products[0],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Hero(
+                          transitionOnUserGestures: true,
+                          tag: state.products[0].id,
+                          child: imageLoader(state.products[0].banner),
                         ),
-                        Center(
-                          child: DefaultText(
-                            text: 'No products found!',
-                          ),
-                        )
-                      ],
-                    );
-                  } else {
-                    return GridView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
                       ),
-                      itemCount: state.products.length,
-                      itemBuilder: (context, index) {
-                        return productItem(state.products[index]);
-                      },
-                    );
-                  }
-                },
-              ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        child: SwiperHeaderWidget(
+                          modelNotifier: productNotifier,
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Stack(
+                    children: [
+                      SwiperWidget(
+                        products: state.products,
+                        onIndexChanged: (value) {
+                          productNotifier.value = value;
+                        },
+                      ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        child: SwiperHeaderWidget(
+                          modelNotifier: productNotifier,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
             );
           } else if (state is ProductsErrorState) {
             return errorWidget(
