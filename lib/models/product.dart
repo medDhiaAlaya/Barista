@@ -1,5 +1,3 @@
-import 'package:barista/presentation/products/widgets/enums.dart';
-
 class Product {
   final String id;
   final String name;
@@ -8,7 +6,6 @@ class Product {
   final String banner;
   final List<String> images;
   final String categoryId;
-  final ProductType type;
 
   Product({
     required this.id,
@@ -18,7 +15,6 @@ class Product {
     required this.banner,
     required this.images,
     required this.categoryId,
-    required this.type,
   });
 
   factory Product.fromJson(Map<String, dynamic> data) {
@@ -30,7 +26,6 @@ class Product {
       banner: data['banner'] ?? '',
       images: data['images'] ?? [],
       categoryId: data['category_id'] ?? '',
-      type: data['type'] == 'drink' ? ProductType.drink : ProductType.food,
     );
   }
 
@@ -42,7 +37,6 @@ class Product {
       'banner': banner,
       'images': images,
       'category_id': categoryId,
-      'type': type == ProductType.drink ? 'drink' : 'food',
     };
   }
 }

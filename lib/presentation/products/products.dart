@@ -1,5 +1,6 @@
 import 'package:barista/models/category.dart';
 import 'package:barista/models/product.dart';
+import 'package:barista/models/shopping_cart.dart';
 import 'package:barista/presentation/cart/bloc/shopping_cart_bloc.dart';
 import 'package:barista/presentation/cart/shopping_cart.dart';
 import 'package:barista/presentation/product/product.dart';
@@ -10,6 +11,8 @@ import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/components/error_widget.dart';
 import 'package:barista/shared/components/loading_shimmer.dart';
 import 'package:barista/shared/helpers/image_loader.dart';
+import 'package:barista/shared/helpers/snack_bar.dart';
+import 'package:barista/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +27,8 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   ValueNotifier<ProductWithDirection> productNotifier =
       ValueNotifier<ProductWithDirection>(ProductWithDirection());
+  int currentIndex = 0;
+  int quantity = 0;
   @override
   void initState() {
     ProductsBloc.get(context).add(
@@ -37,6 +42,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(widget.category.name),
         actions: [
@@ -48,7 +54,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
               );
             },
-            icon: BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+            icon: BlocConsumer<ShoppingCartBloc, ShoppingCartState>(
+              listener: (context, state) {
+                bool isItemExists = ShoppingCartBloc.get(context)
+                    .shoppingCart
+                    .items
+                    .any((item) =>
+                        item.product.id == productNotifier.value.product?.id);
+                if (isItemExists) {
+                  quantity = ShoppingCartBloc.get(context)
+                      .shoppingCart
+                      .items
+                      .singleWhere((item) =>
+                          item.product.id == productNotifier.value.product?.id)
+                      .quantity;
+                  setState(() {});
+                }
+              },
               builder: (context, state) {
                 return Badge(
                   label: DefaultText(
@@ -74,7 +96,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             return Builder(
               builder: (context) {
                 if (state.products.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: DefaultText(
                       text: 'No products found!',
                     ),
@@ -110,6 +132,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   );
                 } else {
                   return Stack(
+                    fit: StackFit.expand,
                     children: [
                       SwiperWidget(
                         products: state.products,
@@ -123,6 +146,128 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         top: 0,
                         child: SwiperHeaderWidget(
                           modelNotifier: productNotifier,
+                        ),
+                      ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 10,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: const ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(
+                                      kPrimaryColor,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (quantity > 0) {
+                                      bool isItemExists =
+                                          ShoppingCartBloc.get(context)
+                                              .shoppingCart
+                                              .items
+                                              .any(
+                                                (item) =>
+                                                    item.product.id ==
+                                                    productNotifier
+                                                        .value.product?.id,
+                                              );
+                                      if (isItemExists) {
+                                        ShoppingCartBloc.get(context).add(
+                                          ShoppingCartUpdateItemEvent(
+                                            shoppingCartItem:
+                                                ShoppingCartBloc.get(context)
+                                                    .shoppingCart
+                                                    .items
+                                                    .singleWhere(
+                                                      (item) =>
+                                                          item.product.id ==
+                                                          productNotifier.value
+                                                              .product?.id,
+                                                    ),
+                                            quantity: quantity,
+                                          ),
+                                        );
+                                        showToast("Product updated", false);
+                                      } else {
+                                        ShoppingCartBloc.get(context).add(
+                                          ShoppingCartAddItemEvent(
+                                            shoppingCartItem: ShoppingCartItem(
+                                              product: productNotifier
+                                                  .value.product!,
+                                              quantity: quantity,
+                                              totalPrice: productNotifier
+                                                      .value.product!.price *
+                                                  quantity,
+                                            ),
+                                          ),
+                                        );
+                                        showToast("Product added", false);
+                                      }
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: DefaultText(
+                                      textSize: 16.0,
+                                      text: ShoppingCartBloc.get(context)
+                                              .shoppingCart
+                                              .items
+                                              .any(
+                                                (item) =>
+                                                    item.product.id ==
+                                                    productNotifier
+                                                        .value.product?.id,
+                                              )
+                                          ? 'Update'
+                                          : 'Add To Cart',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.remove),
+                                        onPressed: quantity > 0
+                                            ? () {
+                                                setState(() {
+                                                  quantity -= 1;
+                                                });
+                                              }
+                                            : null,
+                                      ),
+                                      DefaultText(
+                                        textSize: 20,
+                                        text: quantity.toString(),
+                                        weight: FontWeight.w400,
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () {
+                                          setState(() {
+                                            quantity += 1;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],

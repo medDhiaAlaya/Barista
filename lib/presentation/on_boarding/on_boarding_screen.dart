@@ -78,7 +78,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: DefaultText(
+                    child: const DefaultText(
                       text: 'Skip',
                       textSize: 18,
                       weight: FontWeight.w600,

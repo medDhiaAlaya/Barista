@@ -38,13 +38,13 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CircleAvatar(
-                      child: Image.asset('assets/images/thinking.png'),
                       radius: 120,
+                      child: Image.asset('assets/images/thinking.png'),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    DefaultText(
+                    const DefaultText(
                       textColor: Colors.white,
                       textSize: 20,
                       text: 'Shopping cart is empty!',

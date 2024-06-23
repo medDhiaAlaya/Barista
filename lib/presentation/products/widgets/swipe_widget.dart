@@ -1,6 +1,5 @@
 import 'package:barista/models/product.dart';
 import 'package:barista/presentation/products/widgets/custom_swiper.dart';
-import 'package:barista/presentation/products/widgets/enums.dart';
 import 'package:barista/presentation/products/widgets/swiper_header_widget.dart';
 import 'package:barista/shared/helpers/image_loader.dart';
 import 'package:flutter/material.dart';
@@ -105,21 +104,11 @@ class SwiperWidgetState extends State<SwiperWidget> {
     required int position,
     AnimationOffset? animation,
   }) {
-    return Stack(
+    return Hero(
       key: ValueKey(index),
-      fit: StackFit.expand,
-      children: [
-        Hero(
-          transitionOnUserGestures: true,
-          tag: widget.products[index].id,
-          child: imageLoader(widget.products[index].banner),
-        ),
-        ClickableArea(
-          position: position,
-          product: widget.products[index],
-          animation: animation,
-        ),
-      ],
+      transitionOnUserGestures: true,
+      tag: widget.products[index].id,
+      child: imageLoader(widget.products[index].banner),
     );
   }
 
@@ -166,24 +155,15 @@ class SwiperWidgetState extends State<SwiperWidget> {
     if (_firstTime) {
       animationList = CustomSwiper.animations[AnimationType.none];
     } else {
-      animationList = CustomSwiper.animations[
-          widget.products.first.type == ProductType.food
-              ? AnimationType.food
-              : AnimationType.drink];
+      animationList = CustomSwiper.animations[AnimationType.animation];
     }
 
     if (position < (animationList?.length ?? 0)) {
       return animationList![position];
     } else {
       AnimationOffset animation;
-      if (swipeNotifier.value == MoveType.down) {
-        animation = const AnimationOffset(1, 1, 0, -0.2);
-      } else if (swipeNotifier.value == MoveType.up) {
-        if (widget.products.first.type == ProductType.food) {
-          animation = const AnimationOffset(0.9, 0.8, 0.0, -0.3);
-        } else {
-          animation = const AnimationOffset(0.9, 0.8, -0.2, -0.3);
-        }
+      if (swipeNotifier.value == MoveType.up) {
+        animation = const AnimationOffset(0.9, 0.8, 0.0, -0.3);
       } else {
         animation = const AnimationOffset(1, 1, 0, -0.2);
       }

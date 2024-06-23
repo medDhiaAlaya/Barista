@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:barista/models/qr_data.dart';
 import 'package:barista/presentation/cart/bloc/shopping_cart_bloc.dart';
 import 'package:barista/presentation/categories/categories.dart';
@@ -8,7 +6,6 @@ import 'package:barista/presentation/welcome/bloc/welcome_bloc.dart';
 import 'package:barista/shared/components/default_text.dart';
 import 'package:barista/shared/components/error_widget.dart';
 import 'package:barista/shared/components/loading_widget.dart';
-import 'package:barista/shared/components/my_button.dart';
 import 'package:barista/shared/helpers/image_loader.dart';
 import 'package:barista/shared/helpers/snack_bar.dart';
 import 'package:barista/shared/styles/colors.dart';
@@ -54,7 +51,7 @@ class _WelcomeState extends State<Welcome> {
                       Container(
                         height: 250,
                         width: double.infinity,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: kPrimaryColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(25),
@@ -110,21 +107,20 @@ class _WelcomeState extends State<Welcome> {
                         left: 30,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                            elevation: MaterialStateProperty.all<double>(10),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
+                            elevation: const WidgetStatePropertyAll(10),
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                              const EdgeInsets.symmetric(
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.symmetric(
                                 horizontal: 20,
                                 vertical: 16,
                               ),
                             ),
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
+                                const WidgetStatePropertyAll(Colors.white),
                           ),
                           onPressed: () {
                             Navigator.of(context).push(
@@ -136,7 +132,7 @@ class _WelcomeState extends State<Welcome> {
                             );
                           },
                           child: const DefaultText(
-                            text: 'Check our menu ' + ' \u{1F4D6}',
+                            text: 'Check our menu ' ' \u{1F4D6}',
                             textSize: 18,
                             textColor: kSecondaryColor,
                           ),
@@ -218,11 +214,11 @@ class _WelcomeState extends State<Welcome> {
                   textSize: 16,
                 ),
                 FloatingActionButton(
-                  child: const Icon(Icons.content_copy),
                   backgroundColor: kPrimaryColor,
                   onPressed: () {
                     copyPassword(context);
                   },
+                  child: const Icon(Icons.content_copy),
                 ),
               ],
             ),

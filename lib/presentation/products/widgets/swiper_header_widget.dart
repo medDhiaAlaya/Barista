@@ -61,32 +61,15 @@ class _SwiperHeaderWidgetState extends State<SwiperHeaderWidget> {
               curve: Curves.fastOutSlowIn,
               child: Opacity(
                 opacity: 1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      model.product?.name ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 30.spMin,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(start: 4.w),
-                      child: Text(
-                        model.product?.description ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 16.spMin,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  model.product?.name ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 30.spMin,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             )),
@@ -123,7 +106,7 @@ class _SwiperHeaderWidgetState extends State<SwiperHeaderWidget> {
                   children: [
                     TextSpan(
                       text:
-                          'DT${model.product?.price.toString().split('.').first}.',
+                          '${model.product?.price.toString().split('.').first ?? '00'}.',
                       style: TextStyle(
                         fontSize: 32.spMin,
                         color: Colors.black,
@@ -131,7 +114,8 @@ class _SwiperHeaderWidgetState extends State<SwiperHeaderWidget> {
                       ),
                     ),
                     TextSpan(
-                      text: model.product?.price.toString().split('.').last,
+                      text:
+                          '${model.product?.price.toString().split('.').last ?? '00'}DT',
                       style: TextStyle(
                         fontSize: 14.spMin,
                         color: Colors.black,

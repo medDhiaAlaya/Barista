@@ -110,7 +110,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      style: ButtonStyle(
+                      style: const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
                           kPrimaryColor,
                         ),
