@@ -33,9 +33,23 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
           final shoppingCart = ShoppingCartBloc.get(context).shoppingCart;
           return Builder(builder: (context) {
             if (shoppingCart.items.isEmpty) {
-              return const Center(
-                child: DefaultText(
-                  text: 'Shopping cart is empty!',
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      child: Image.asset('assets/images/thinking.png'),
+                      radius: 120,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    DefaultText(
+                      textColor: Colors.white,
+                      textSize: 20,
+                      text: 'Shopping cart is empty!',
+                    ),
+                  ],
                 ),
               );
             } else {

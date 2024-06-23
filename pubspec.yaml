@@ -73,9 +73,7 @@ dev_dependencies:
   conditional_builder_null_safety: ^0.0.6
   flutter_native_splash: ^2.3.7
   dropdown_button2: ^2.3.9
-flutter_native_splash:
-  color: "#ffbc0d"
-  image: assets/images/2.png
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -83,6 +81,9 @@ flutter_native_splash:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+flutter_native_splash:
+  color: "#ffbc0d"
+  image: assets/images/2.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
