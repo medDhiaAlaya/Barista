@@ -1,4 +1,4 @@
-package com.example.barista
+package com.GhTech.barista
 
 import io.flutter.embedding.android.FlutterActivity
 

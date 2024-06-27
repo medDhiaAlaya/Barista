@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1055398183314',
     projectId: 'barista-b0741',
     storageBucket: 'barista-b0741.appspot.com',
-    iosBundleId: 'com.example.barista',
+    iosBundleId: 'com.GhTech.barista',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1055398183314',
     projectId: 'barista-b0741',
     storageBucket: 'barista-b0741.appspot.com',
-    iosBundleId: 'com.example.barista',
+    iosBundleId: 'com.GhTech.barista',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
